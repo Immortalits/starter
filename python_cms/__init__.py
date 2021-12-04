@@ -10,8 +10,15 @@ from python_cms.blueprints.auth import auth_blueprint
 from python_cms.models.user import UserModel
 from python_cms.models.post import PostModel
 
+from flask_ckeditor import CKEditor
+
 app = Flask(__name__)
 ROOT_PATH = app.root_path
+
+# https://flask-ckeditor.readthedocs.io/en/latest/index.html
+app.config[
+    'CKEDITOR_FILE_UPLOADER'] = 'pages.upload'  # this value can be endpoint or url
+ckeditor = CKEditor(app)
 
 # database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'

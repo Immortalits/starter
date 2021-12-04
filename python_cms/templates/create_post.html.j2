@@ -1,4 +1,11 @@
 {% extends 'base.html.j2' %}
+
+
+{% block headsource %}
+ {{ ckeditor.load() }}
+{% endblock %}
+
+
 {% block title %} Home {% endblock %}
 
 {% block content %}
@@ -33,5 +40,10 @@
   {{ form.body(class="form-input", placeholder="your article goes here", id='body')}}
   {{ form.submit(class="btn btn-primary input-group-btn float-right", id="createPost")}}
 </form>
+{{ ckeditor.config(name='body') }}
 
+{% endblock %}
+
+{% block bodysource %}
+ <script src="{{url_for('static', filename="create_post.js")}}"></script>
 {% endblock %}
