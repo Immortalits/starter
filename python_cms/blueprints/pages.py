@@ -62,6 +62,22 @@ def single_post(post_id):
   return render_template('post.html.j2', post=post)
 
 
+@pages_blueprint.route("/post/delete/<string:post_id>")
+@login_required
+def delete_post(post_id):
+  post = PostModel.get(post_id)
+
+  if post.author_id == current_user.id:
+    #töröljük a postot
+    post.delete()
+
+    #flash üzenet
+    flash(f"Post with title {post.title} is deleted!")
+    return redirect(url_for("pages.index"))
+  else:
+    return "You are not authorized to delete this content.", 403
+
+
 @pages_blueprint.route('/upload', methods=['POST'])
 def upload():
   f = request.files.get('upload')

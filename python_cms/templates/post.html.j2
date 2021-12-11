@@ -5,7 +5,11 @@
   {% if post.id is not defined %}
     <h1>Post not found</h1>
   {% else %}
-  <h1>{{ post.title }}</h1>
+  <h1>{{ post.title }}
+  {% if current_user.id == post.author_id %}
+    <a href = "/post/delete/{{post.id}}" class ="btn btn-error tooltip tooltip-bottom float-right" data-tooltip="Permanently delete post"> Delete</a>
+  {% endif %}
+  </h1>
   <img src="/files/{{post.teaser_image}}" class="img-responsive article-image-inner" alt="">
   {{ post.body|safe }}
   {% endif %}

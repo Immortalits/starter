@@ -2,9 +2,17 @@
 {% block title %} Home {% endblock %}
 
 {% block content %}
+
   {% if posts|length == 0 %}
   <h1 class="no-posts">We have no posts to show</h1>
   {% endif %}
+
+  {% for message in get_flashed_messages()  %}
+   <div class="toast toast-success">
+       <button class="btn btn-clear float-right"></button>
+         {{message}}
+   </div>
+   {% endfor %}
 
 <div class="columns">
   {% for post in posts %}
