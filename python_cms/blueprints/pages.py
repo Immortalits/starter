@@ -39,9 +39,13 @@ def create_post():
                               attributes=['src', 'alt', 'style'])
     title = request.form.get('title')
     # body = clean_body
-    file = request.files['teaser_image']
-    filename = secure_filename(file.filename)
-    file.save(os.path.join(python_cms.ROOT_PATH, 'files_upload', filename))
+    file = request.files['teaser_image']  #bekéri a fájlokat
+    if file:
+      filename = secure_filename(file.filename)
+      file.save(os.path.join(python_cms.ROOT_PATH, 'files_upload', filename))
+    else:
+      filename = ""
+
     post = PostModel(title, clean_body, current_user.get_id(), filename)
     post.save()
     flash(f'Post with title: {title} is created')

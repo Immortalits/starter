@@ -10,7 +10,12 @@
     <a href = "/post/delete/{{post.id}}" class ="btn btn-error tooltip tooltip-bottom float-right" data-tooltip="Permanently delete post"> Delete</a>
   {% endif %}
   </h1>
-  <img src="/files/{{post.teaser_image}}" class="img-responsive article-image-inner" alt="">
+  {% if post.teaser_image == "" %}
+    <img src="{{ url_for('static', filename='default.jpg') }}" class="img-responsive article-image-inner" alt="">
+
+  {% else %}
+    <img src="/files/{{post.teaser_image}}" class="img-responsive article-image-inner" alt="">
+  {% endif %}
   {{ post.body|safe }}
   {% endif %}
 {% endblock %}
