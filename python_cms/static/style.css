@@ -72,3 +72,7 @@ main {
 .hidden {
   display: none;
 }
+
+.promoted {
+  border: 5px solid purple;
+}

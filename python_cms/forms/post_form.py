@@ -1,5 +1,6 @@
+from collections import defaultdict
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField
+from wtforms import StringField, SubmitField, TextAreaField, BooleanField
 from wtforms.validators import Length, Required
 from flask_wtf.file import FileField, FileAllowed
 from flask_ckeditor import CKEditorField
@@ -27,4 +28,5 @@ class PostForm(FlaskForm):
                  message=
                  "Body length must be between %(min)d and %(max)d characters")
       ])
+  promoted = BooleanField(label="Promoted")
   submit = SubmitField(label=('Create'))

@@ -10,12 +10,14 @@ class PostModel(BaseModel):
   author_id = db.Column(db.String(), db.ForeignKey('users.id'))
   # one post can have only one author
   author = db.relationship('UserModel', back_populates='posts')
+  promoted = db.Column(db.Boolean, nullable=False)
 
-  def __init__(self, title, body, user_id, teaser_image):
+  def __init__(self, title, body, user_id, teaser_image, promoted):
     self.title = title
     self.body = body
     self.author_id = user_id
     self.teaser_image = teaser_image
+    self.promoted = promoted
 
   @classmethod
   def get(cls, post_id):

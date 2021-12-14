@@ -46,7 +46,10 @@ def create_post():
     else:
       filename = ""
 
-    post = PostModel(title, clean_body, current_user.get_id(), filename)
+    promoted = bool(request.form.get("promoted"))
+
+    post = PostModel(title, clean_body, current_user.get_id(), filename,
+                     promoted)
     post.save()
     flash(f'Post with title: {title} is created')
     return redirect(url_for('pages.create_post'))
@@ -93,6 +96,7 @@ def edit_post(post_id):
       form.title.data = post.title
       form.teaser_image.data = post.teaser_image
       form.body.data = post.body
+      form.promoted.data = post.promoted
       form.submit.label.text = "Save"
 
       return render_template('create_post.html.j2',
@@ -121,7 +125,7 @@ def edit_post(post_id):
       file.save(os.path.join(python_cms.ROOT_PATH, 'files_upload', filename))
     else:
       filename = request.form.get("original_teaser_image")
-
+    post.promoted = bool(request.form.get("promoted"))
     post.teaser_image = filename
 
     post.save()

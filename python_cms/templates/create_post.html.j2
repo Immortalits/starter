@@ -54,6 +54,9 @@
 
   <label for="body" class="form-label"> {{ form.body.label }}</label>
   {{ form.body(class="form-input", placeholder="your article goes here", id='body')}}
+
+  {{ form.promoted }} {{ form.promoted.label }}
+
   {{ form.submit(class="btn btn-primary input-group-btn float-right", id="createPost")}}
 </form>
 {{ ckeditor.config(name='body') }}
