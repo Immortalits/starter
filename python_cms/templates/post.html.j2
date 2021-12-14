@@ -8,6 +8,7 @@
   <h1>{{ post.title }}
   {% if current_user.id == post.author_id %}
     <a href = "/post/delete/{{post.id}}" class ="btn btn-error tooltip tooltip-bottom float-right" data-tooltip="Permanently delete post"> Delete</a>
+    <a href = "/post/edit/{{post.id}}" class ="btn btn-primary float-right" style="margin-right:5px"> Edit</a>
   {% endif %}
   </h1>
   {% if post.teaser_image == "" %}

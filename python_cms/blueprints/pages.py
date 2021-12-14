@@ -82,6 +82,53 @@ def delete_post(post_id):
     return "You are not authorized to delete this content.", 403
 
 
+@pages_blueprint.route("/post/edit/<string:post_id>", methods=['GET', 'POST'])
+@login_required
+def edit_post(post_id):
+  if request.method == "GET":
+    post = PostModel.get(post_id)
+    if post.author_id == current_user.id:
+      #saját post
+      form = PostForm()
+      form.title.data = post.title
+      form.teaser_image.data = post.teaser_image
+      form.body.data = post.body
+      form.submit.label.text = "Save"
+
+      return render_template('create_post.html.j2',
+                             form=form,
+                             edit=True,
+                             post_id=post_id)
+
+    else:
+      return "You are not authorized to edit this content!", 403
+  elif request.method == "POST":
+    unescaped_body = html.unescape(request.form.get('body'))
+    clean_body = bleach.clean(unescaped_body,
+                              tags=bleach.sanitizer.ALLOWED_TAGS +
+                              ['div', 'br', 'p', 'h1', 'h2', 'img', 'h3'],
+                              attributes=['src', 'alt', 'style'])
+
+    post = PostModel.get(post_id)
+    post.title = request.form.get('title')
+    post.body = clean_body
+
+    # body = clean_body
+    file = request.files['teaser_image']  #bekéri a fájlokat
+
+    if file:
+      filename = secure_filename(file.filename)
+      file.save(os.path.join(python_cms.ROOT_PATH, 'files_upload', filename))
+    else:
+      filename = request.form.get("original_teaser_image")
+
+    post.teaser_image = filename
+
+    post.save()
+    flash(f'Post with title: {post.title} is updated')
+    return redirect(url_for('pages.index'))
+
+
 @pages_blueprint.route('/upload', methods=['POST'])
 def upload():
   f = request.files.get('upload')

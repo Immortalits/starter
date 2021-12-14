@@ -9,7 +9,11 @@
 {% block title %} Home {% endblock %}
 
 {% block content %}
+  {% if edit is defined and edit == True %}
+  <h1>Edit post</h1>
+  {% else %}
   <h1>Create post</h1>
+  {% endif %}
   {% for message in get_flashed_messages()  %}
    <div class="toast toast-success">
        <button class="btn btn-clear float-right"></button>
@@ -26,15 +30,27 @@
     {% endfor %}
   {% endfor %}
 
+{% if edit is defined and edit == True %}
+    <form action="/post/edit/{{post_id}}" method="POST" class="form-group" enctype="multipart/form-data">
+    <input type="hidden" value="{{ form.teaser_image.data }}" name="original_teaser_image" id="originalTeaserImage">
+{% else %}
+  <form action="/add" method="POST" class="form-group" enctype="multipart/form-data">
+{% endif %}
 
-
-<form action="/add" method="POST" class="form-group" enctype="multipart/form-data">
   {# protect against csrf https://portswigger.net/web-security/csrf/tokens #}
   {{ form.csrf_token() }}
   <label for="title"> {{ form.title.label }}</label>
   {{ form.title(class="form-input", placeholder="title")}}
+
+
   <label for="teaser_image"> {{ form.teaser_image.label }}</label>
-  {{ form.teaser_image(class="form-input")}}
+  {% if form.teaser_image.data == "" %}
+    {{ form.teaser_image(class="form-input") }}
+  {% else %}
+    {{ form.teaser_image(class="form-input hidden", id = "feltolto") }}
+    <img src="/files/{{form.teaser_image.data}}" class="img-responsive article-image-inner" id = "kep">
+    <a href = "#" id = "deleteimg" class ="btn btn-error"> Delete image</a>
+  {% endif %}
 
   <label for="body" class="form-label"> {{ form.body.label }}</label>
   {{ form.body(class="form-input", placeholder="your article goes here", id='body')}}

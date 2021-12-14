@@ -7,6 +7,16 @@ document.querySelector('#createPost').addEventListener('click', function (e) {
   }
 });
 
+document.querySelector('#deleteimg').addEventListener('click', function (e) {
+  document.getElementById("kep").remove();
+  document.getElementById("deleteimg").remove();
+  document.getElementById("feltolto").classList.remove("hidden");
+  document.getElementById("originalTeaserImage").value = "";
+
+  e.preventDefault();
+
+});
+
 // if there are toasts visible
 // https://picturepan2.github.io/spectre/components/toasts.html
 // this will make it dissapear, if the user clicks on the X
