@@ -3,6 +3,7 @@ from flask.helpers import flash
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename, redirect
 import os
+from python_cms.models.category import CategoryModel
 from python_cms.models.post import PostModel
 from python_cms.forms.post_form import PostForm
 import python_cms
@@ -31,6 +32,14 @@ def about():
 @login_required
 def create_post():
   form = PostForm()
+  categories = CategoryModel('test').get_all()  #lekérjük az összeset
+  choices = []  # választási lehetőségek
+  for cat in categories:
+    value = (cat.id, cat.name)
+    choices.append(value)
+
+  form.category.choices = choices  # betöltjük a kategóriákat
+
   if request.method == 'POST' and form.validate_on_submit():
     unescaped_body = html.unescape(request.form.get('body'))
     clean_body = bleach.clean(unescaped_body,
@@ -47,9 +56,10 @@ def create_post():
       filename = ""
 
     promoted = bool(request.form.get("promoted"))
+    category = CategoryModel("test").get(request.form.get("category")).id
 
     post = PostModel(title, clean_body, current_user.get_id(), filename,
-                     promoted)
+                     promoted, category)
     post.save()
     flash(f'Post with title: {title} is created')
     return redirect(url_for('pages.create_post'))
@@ -93,6 +103,18 @@ def edit_post(post_id):
     if post.author_id == current_user.id:
       #saját post
       form = PostForm()
+
+      categories = CategoryModel('test').get_all()  #lekérjük az összeset
+      choices = []  # választási lehetőségek
+      for cat in categories:
+        value = (cat.id, cat.name)
+        choices.append(value)
+
+      form.category.choices = choices  # betöltjük a kategóriákat
+
+      form.category.default = post.category_id
+      form.process()
+
       form.title.data = post.title
       form.teaser_image.data = post.teaser_image
       form.body.data = post.body
@@ -125,8 +147,11 @@ def edit_post(post_id):
       file.save(os.path.join(python_cms.ROOT_PATH, 'files_upload', filename))
     else:
       filename = request.form.get("original_teaser_image")
-    post.promoted = bool(request.form.get("promoted"))
+
     post.teaser_image = filename
+    post.promoted = bool(request.form.get("promoted"))
+    post.category_id = CategoryModel("teszt").get(
+        request.form.get("category")).id
 
     post.save()
     flash(f'Post with title: {post.title} is updated')

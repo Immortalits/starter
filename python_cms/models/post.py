@@ -7,17 +7,22 @@ class PostModel(BaseModel):
   title = db.Column(db.String(80), nullable=False)
   teaser_image = db.Column(db.String(80), nullable=False)
   body = db.Column(db.String(8000), nullable=False)
-  author_id = db.Column(db.String(), db.ForeignKey('users.id'))
   # one post can have only one author
-  author = db.relationship('UserModel', back_populates='posts')
+  author_id = db.Column(db.String(), db.ForeignKey('users.id'))
   promoted = db.Column(db.Boolean, nullable=False)
+  category_id = db.Column(db.String(), db.ForeignKey('categories.id'))
 
-  def __init__(self, title, body, user_id, teaser_image, promoted):
+  author = db.relationship('UserModel', back_populates='posts')
+  category = db.relationship('CategoryModel', back_populates='posts')
+
+  def __init__(self, title, body, user_id, teaser_image, promoted,
+               category_id):
     self.title = title
     self.body = body
     self.author_id = user_id
     self.teaser_image = teaser_image
     self.promoted = promoted
+    self.category_id = category_id
 
   @classmethod
   def get(cls, post_id):

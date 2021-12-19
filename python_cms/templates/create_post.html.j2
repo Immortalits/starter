@@ -52,6 +52,15 @@
     <a href = "#" id = "deleteimg" class ="btn btn-error"> Delete image</a>
   {% endif %}
 
+ <label class="form-label">{{ form.category.label }}</label>
+ {% for subfield in form.category %}
+ <label class="form-radio form-inline">
+   {{ subfield }}
+   <i class="form-icon"></i> {{ subfield.label.text }}
+ </label>
+ {% endfor %}
+
+
   <label for="body" class="form-label"> {{ form.body.label }}</label>
   {{ form.body(class="form-input", placeholder="your article goes here", id='body')}}
 

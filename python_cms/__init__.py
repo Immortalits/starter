@@ -9,6 +9,7 @@ from python_cms.blueprints.auth import auth_blueprint
 
 from python_cms.models.user import UserModel
 from python_cms.models.post import PostModel
+from python_cms.models.category import CategoryModel
 
 from flask_ckeditor import CKEditor
 
